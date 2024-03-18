@@ -1,12 +1,13 @@
 package com.wbt.handsonspringboot101.customer;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public record CustomerService(CustomerDAO customerDAO) {
+public record CustomerService(@Qualifier(value = "FAKE") CustomerDAO customerDAO) {
 
     public List<CustomerResponse> fetchAll() {
         return this.customerDAO.fetchAll();
