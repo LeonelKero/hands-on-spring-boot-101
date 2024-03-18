@@ -44,21 +44,24 @@ public record FakeDataService() {
     }
 
     Boolean updateCustomer(final Long customerId, final CustomerRequest request) {
-        if (this.fetchCustomer(customerId).isEmpty()) return false; // if selected customer doesn't exist
+        if (this.fetchCustomer(customerId).isEmpty()) {
+            return false; // if selected customer doesn't exist
+        } else {
 
-        // if it does exist, get it
-        final var existingCustomer = customers.stream().filter(customer -> Objects.equals(customer.getId(), customerId))
-                .findFirst()
-                .get();
-        // update fields
-        existingCustomer.setName(request.name());
-        existingCustomer.setEmail(request.email());
-        existingCustomer.setAge(request.age());
-        // remove the old one
-        this.removeCustomer(customerId);
-        // save the updated one, and return
-        customers.add(existingCustomer);
+            // if it does exist, get it
+            final var existingCustomer = customers.stream().filter(customer -> Objects.equals(customer.getId(), customerId))
+                    .findFirst()
+                    .get();
+            // update fields
+            existingCustomer.setName(request.name());
+            existingCustomer.setEmail(request.email());
+            existingCustomer.setAge(request.age());
+            // remove the old one
+            this.removeCustomer(customerId);
+            // save the updated one, and return
+            customers.add(existingCustomer);
 
-        return true;
+            return true;
+        }
     }
 }
