@@ -1,0 +1,3 @@
+spring.application.name: hands-on-spring-boot-101
+server:
+  port: 8080
