@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = {"/api/v1/customers"})
-public record CustomerController(FakeDataService fakeDataService) {
+public record CustomerController(CustomerDAO fakeDataService) {
 
     @GetMapping
     ResponseEntity<List<CustomerResponse>> findAll() {
