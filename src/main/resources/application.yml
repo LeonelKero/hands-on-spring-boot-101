@@ -2,8 +2,8 @@ spring:
   application.name: hands-on-spring-boot-101
   datasource:
     username: postgres
-    password:
-    url: jdbc:postgres://localhost:5432/customer
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/customer
   jpa:
     hibernate:
       ddl-auto: 'create-drop'
