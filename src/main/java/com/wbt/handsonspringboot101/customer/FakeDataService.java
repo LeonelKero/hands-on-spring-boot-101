@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public record FakeDataService() {
+public class FakeDataService implements CustomerDAO {
     private static List<Customer> customers;
 
     static {
@@ -18,23 +18,27 @@ public record FakeDataService() {
         customers.add(new Customer(2L, "tom", "tom@gmail.com", 31));
     }
 
-    Boolean save(final CustomerRequest request) {
+    @Override
+    public Boolean save(final CustomerRequest request) {
         return customers.add(new Customer(customers.size() + 1L, request.name(), request.email(), request.age()));
     }
 
-    List<CustomerResponse> fetchAll() {
+    @Override
+    public List<CustomerResponse> fetchAll() {
         return customers.stream()
                 .map(customer -> new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getAge()))
                 .collect(Collectors.toList());
     }
 
-    Optional<CustomerResponse> fetchCustomer(final Long customerId) {
+    @Override
+    public Optional<CustomerResponse> fetchCustomer(final Long customerId) {
         return customers.stream().filter(customer -> Objects.equals(customer.getId(), customerId))
                 .map(customer -> new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getAge()))
                 .findFirst();
     }
 
-    Boolean removeCustomer(final Long customerId) {
+    @Override
+    public Boolean removeCustomer(final Long customerId) {
         final var optionalCustomer = this.fetchCustomer(customerId);
         if (optionalCustomer.isPresent()) {
             customers = customers.stream().filter(customer -> !Objects.equals(customer.getId(), customerId)).collect(Collectors.toList());
@@ -43,7 +47,8 @@ public record FakeDataService() {
         return false;
     }
 
-    Boolean updateCustomer(final Long customerId, final CustomerRequest request) {
+    @Override
+    public Boolean updateCustomer(final Long customerId, final CustomerRequest request) {
         if (this.fetchCustomer(customerId).isEmpty()) {
             return false; // if selected customer doesn't exist
         } else {
