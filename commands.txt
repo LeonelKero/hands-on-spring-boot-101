@@ -1,0 +1,6 @@
+// Access running postgres container
+$ docker exec -it [postgres_container_name] bash
+
+// Connect to postgres
+$ psql -U [username]
+
