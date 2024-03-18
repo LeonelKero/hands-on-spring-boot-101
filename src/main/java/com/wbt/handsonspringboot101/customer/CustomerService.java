@@ -1,10 +1,10 @@
 package com.wbt.handsonspringboot101.customer;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public record CustomerService(@Qualifier(value = "FAKE") CustomerDAO customerDAO) {
@@ -17,8 +17,8 @@ public record CustomerService(@Qualifier(value = "FAKE") CustomerDAO customerDAO
         return this.customerDAO.save(customerRequest);
     }
 
-    public Optional<CustomerResponse> fetchCustomer(final Long id) {
-        return this.customerDAO.fetchCustomer(id);
+    public ResponseEntity<CustomerResponse> fetchCustomer(final Long id) {
+        return this.customerDAO.fetchCustomer(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public Boolean removeCustomer(final Long id) {

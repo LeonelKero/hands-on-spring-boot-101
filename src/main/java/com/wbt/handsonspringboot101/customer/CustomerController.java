@@ -17,8 +17,7 @@ public record CustomerController(CustomerService customerService) {
 
     @GetMapping(path = {"/{id}"})
     ResponseEntity<CustomerResponse> getCustomer(final @PathVariable(name = "id") Long id) {
-        final var optionalCustomer = this.customerService.fetchCustomer(id);
-        return optionalCustomer.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return this.customerService.fetchCustomer(id);
     }
 
     @PostMapping
