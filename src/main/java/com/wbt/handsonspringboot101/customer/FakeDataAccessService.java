@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository(value = "FAKE")
-public class FakeDataService implements CustomerDAO {
+public class FakeDataAccessService implements CustomerDAO {
     private static List<Customer> customers;
 
     static {
