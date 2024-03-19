@@ -1,6 +1,6 @@
 services:
   db-service:
-    container_name: postgres16
+    container_name: postgres-16
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
