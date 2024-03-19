@@ -8,10 +8,10 @@ import java.util.Objects;
 public class Customer {
     @Id
     @SequenceGenerator(
-            name = "customer_id_sequence",
+            name = "customer_id_seq",
             allocationSize = 1,
-            sequenceName = "customer_id_sequence")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_sequence")
+            sequenceName = "customer_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_seq")
     private Long id;
     @Column(nullable = false)
     private String name;
