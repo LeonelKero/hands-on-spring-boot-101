@@ -69,4 +69,9 @@ public class FakeDataService implements CustomerDAO {
             return true;
         }
     }
+
+    @Override
+    public Boolean isEmailAlreadyExist(final String email) {
+        return customers.stream().anyMatch(customer -> customer.getEmail().equals(email));
+    }
 }

@@ -1,5 +1,7 @@
 package com.wbt.handsonspringboot101.customer;
 
+import com.wbt.handsonspringboot101.exception.DuplicateResourcefoundException;
+import com.wbt.handsonspringboot101.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +18,8 @@ public class CustomerJpaDataAccessService implements CustomerDAO {
 
     @Override
     public Boolean save(CustomerRequest request) {
+        if (this.customerRepository.existsCustomerByEmail(request.email()))
+            throw new DuplicateResourcefoundException("Email already taken");
         this.customerRepository.save(new Customer(request.name(), request.email(), request.age()));
         return true;
     }
@@ -38,12 +42,11 @@ public class CustomerJpaDataAccessService implements CustomerDAO {
 
     @Override
     public Boolean removeCustomer(Long customerId) {
-        final var optionalCustomer = this.customerRepository.findById(customerId);
-        if (optionalCustomer.isPresent()) {
+        if (this.customerRepository.existsCustomerById(customerId)) {
             this.customerRepository.deleteById(customerId);
             return true;
         }
-        return false;
+        throw new ResourceNotFoundException("Customer resource with id [%s] not found".formatted(customerId));
     }
 
     @Override
@@ -59,5 +62,10 @@ public class CustomerJpaDataAccessService implements CustomerDAO {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Boolean isEmailAlreadyExist(final String email) {
+        return this.customerRepository.existsCustomerByEmail(email);
     }
 }

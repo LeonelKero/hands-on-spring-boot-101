@@ -9,4 +9,5 @@ public interface CustomerDAO {
     Optional<CustomerResponse> fetchCustomer(final Long customerId);
     Boolean removeCustomer(final Long customerId);
     Boolean updateCustomer(final Long customerId, final CustomerRequest request);
+    Boolean isEmailAlreadyExist(final String email);
 }
