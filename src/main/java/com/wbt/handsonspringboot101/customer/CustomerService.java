@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public record CustomerService(@Qualifier(value = "FAKE") CustomerDAO customerDAO) {
+public record CustomerService(@Qualifier(value = "JPA") CustomerDAO customerDAO) {
 
     public List<CustomerResponse> fetchAll() {
         return this.customerDAO.fetchAll();
