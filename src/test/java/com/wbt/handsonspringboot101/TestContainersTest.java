@@ -1,5 +1,6 @@
 package com.wbt.handsonspringboot101;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -20,5 +21,14 @@ public class TestContainersTest {
     void canStartPostgresDB() {
         assertThat(postgresalContainer.isRunning()).isTrue();
         assertThat(postgresalContainer.isCreated()).isTrue();
+    }
+
+    @Test
+    void canApplyDbMigrationsWithFlyway() {
+        final var flyway = Flyway
+                .configure()
+                .dataSource(postgresalContainer.getJdbcUrl(), postgresalContainer.getUsername(), postgresalContainer.getPassword())
+                .load();
+        flyway.migrate();
     }
 }
