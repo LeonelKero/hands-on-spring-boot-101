@@ -2,6 +2,8 @@ package com.wbt.handsonspringboot101;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -11,23 +13,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 public class TestContainersTest {
     @Container
-    private static final PostgreSQLContainer<?> postgresalContainer =
+    private static final PostgreSQLContainer<?> postgresqlContainer =
             new PostgreSQLContainer<>("postgres:16")
                     .withDatabaseName("wbt-dao-unit-test")
                     .withUsername("postgres")
                     .withPassword("postgres");
 
+    @DynamicPropertySource
+    private static void registerDatasourceProperties(final DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgresqlContainer::getUsername);
+        registry.add("spring.datasource.password", postgresqlContainer::getPassword);
+    }
+
     @Test
     void canStartPostgresDB() {
-        assertThat(postgresalContainer.isRunning()).isTrue();
-        assertThat(postgresalContainer.isCreated()).isTrue();
+        assertThat(postgresqlContainer.isRunning()).isTrue();
+        assertThat(postgresqlContainer.isCreated()).isTrue();
     }
 
     @Test
     void canApplyDbMigrationsWithFlyway() {
         final var flyway = Flyway
                 .configure()
-                .dataSource(postgresalContainer.getJdbcUrl(), postgresalContainer.getUsername(), postgresalContainer.getPassword())
+                .dataSource(postgresqlContainer.getJdbcUrl(), postgresqlContainer.getUsername(), postgresqlContainer.getPassword())
                 .load();
         flyway.migrate();
     }
