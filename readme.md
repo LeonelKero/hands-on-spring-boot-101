@@ -19,6 +19,7 @@ This is a hands on project on Spring Boot 3, going from ground up. All fundament
 * JSON
 * REST Services
 * TestContainers
+* Mockito
 
 ## Learning
 
