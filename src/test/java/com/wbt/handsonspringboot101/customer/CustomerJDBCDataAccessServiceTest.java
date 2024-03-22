@@ -23,8 +23,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         // GIVEN
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("nero-test", testEmail, 20);
-        // WHEN
         underTest.save(customer);
+        // WHEN
         final var savedCustomer = underTest.isEmailAlreadyExist(testEmail);
         // THEN
         assertThat(savedCustomer).isTrue();
@@ -35,8 +35,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         // GIVEN
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("nero-test", testEmail, 20);
-        // WHEN
         underTest.save(customer);
+        // WHEN
         final var customers = underTest.fetchAll();
         // THEN
         assertThat(customers.size()).isGreaterThan(0);
@@ -66,9 +66,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         // GIVEN
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("nero-test", testEmail, 20);
-        // WHEN
         underTest.save(customer);
         final var savedCustomer = underTest.fetchCutomerByEmail(testEmail).orElseThrow();
+        // WHEN
         final var isRemoved = underTest.removeCustomer(savedCustomer.id());
         // THEN
         assertThat(isRemoved).isTrue();
@@ -99,9 +99,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         // GIVEN
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("mel-test", testEmail, 28);
-        // WHEN
         underTest.save(customer);
         final var savedCustomer = underTest.fetchCutomerByEmail(testEmail).orElseThrow();
+        // WHEN
         String newEmail = UUID.randomUUID() + ".mel@hotmail.com";
         final var newCustomer = new CustomerRequest("mel-new-name", newEmail, 28);
         final var isUpdated = underTest.updateCustomer(savedCustomer.id(), newCustomer);
@@ -121,8 +121,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("nero-test", testEmail, 20);
         final var customer2 = new CustomerRequest("mel-test", testEmail, 32);
-        // WHEN
         underTest.save(customer);
+        // WHEN
         // THEN
         assertThat(underTest.save(customer2)).isFalse();
     }
