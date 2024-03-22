@@ -70,7 +70,7 @@ public class CustomerJpaDataAccessService implements CustomerDAO {
     }
 
     @Override
-    public Optional<CustomerResponse> fetchCutomerByEmail(final String email) {
+    public Optional<CustomerResponse> fetchCustomerByEmail(final String email) {
         return this.customerRepository
                 .findByEmail(email)
                 .map(customer -> new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getAge()));
