@@ -41,6 +41,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
 
     @Override
     public Boolean removeCustomer(final Long customerId) {
+        if (this.fetchCustomer(customerId).isEmpty()) return false;
         final var deleteSql = "DELETE FROM customer WHERE id = ?";
         final var rowsAffected = this.jdbcTemplate.update(deleteSql, customerId);
         return rowsAffected != 0;

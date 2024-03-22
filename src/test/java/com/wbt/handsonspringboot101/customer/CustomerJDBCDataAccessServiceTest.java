@@ -75,13 +75,23 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
     }
 
     @Test
+    void whenCustomerDoNotExistByIdNotDeletion() {
+        // GIVEN
+        final var fakeCustomerId = -1L;
+        // WHEN
+        final var result = underTest.removeCustomer(fakeCustomerId);
+        // THEN
+        assertThat(result).isFalse();
+    }
+
+    @Test
     void whenGivenWrongCustomerIdReturnEmpty() {
         // GIVEN
         final var wrongId = -2L;
         // WHEN
-        final var possibleCustomer = underTest.fetchCustomer(wrongId);
+        final var possibleCustomer = underTest.removeCustomer(wrongId);
         // THEN
-        assertThat(possibleCustomer).isEmpty();
+        assertThat(possibleCustomer).isFalse();
     }
 
     @Test
