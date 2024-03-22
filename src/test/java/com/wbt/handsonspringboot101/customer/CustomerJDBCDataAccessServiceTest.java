@@ -49,7 +49,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         final var customer = new CustomerRequest("nero-test", testEmail, 27);
         underTest.save(customer);
         // WHEN
-        final var savedCustomer = underTest.fetchCutomerByEmail(testEmail);
+        final var savedCustomer = underTest.fetchCustomerByEmail(testEmail);
         final var id = underTest.fetchCustomer(savedCustomer.get().id()).orElseThrow().id();
         // THEN
         assertThat(savedCustomer).isNotEmpty();
@@ -67,7 +67,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("nero-test", testEmail, 20);
         underTest.save(customer);
-        final var savedCustomer = underTest.fetchCutomerByEmail(testEmail).orElseThrow();
+        final var savedCustomer = underTest.fetchCustomerByEmail(testEmail).orElseThrow();
         // WHEN
         final var isRemoved = underTest.removeCustomer(savedCustomer.id());
         // THEN
@@ -100,15 +100,15 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         String testEmail = "nero-" + UUID.randomUUID() + ".test@gmail.com";
         final var customer = new CustomerRequest("mel-test", testEmail, 28);
         underTest.save(customer);
-        final var savedCustomer = underTest.fetchCutomerByEmail(testEmail).orElseThrow();
+        final var savedCustomer = underTest.fetchCustomerByEmail(testEmail).orElseThrow();
         // WHEN
         String newEmail = UUID.randomUUID() + ".mel@hotmail.com";
         final var newCustomer = new CustomerRequest("mel-new-name", newEmail, 28);
         final var isUpdated = underTest.updateCustomer(savedCustomer.id(), newCustomer);
         // THEN
-        assertThat(underTest.fetchCutomerByEmail(testEmail)).isEmpty();
+        assertThat(underTest.fetchCustomerByEmail(testEmail)).isEmpty();
         assertThat(isUpdated).isTrue();
-        assertThat(underTest.fetchCutomerByEmail(newEmail)).isPresent().hasValueSatisfying(customerResponse -> {
+        assertThat(underTest.fetchCustomerByEmail(newEmail)).isPresent().hasValueSatisfying(customerResponse -> {
             assertThat(customerResponse.name()).isEqualTo(newCustomer.name());
             assertThat(customerResponse.email()).isEqualTo(newCustomer.email());
             assertThat(customerResponse.age()).isEqualTo(newCustomer.age());
@@ -130,7 +130,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
     @Test
     void requestCustomerWithNullEmailValueReturnEmpty() {
         // GIVEN // WHEN
-        final var result = underTest.fetchCutomerByEmail(null);
+        final var result = underTest.fetchCustomerByEmail(null);
         // THEN
         assertThat(result).isEmpty();
     }

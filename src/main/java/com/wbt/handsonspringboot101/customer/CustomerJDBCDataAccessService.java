@@ -66,7 +66,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
     }
 
     @Override
-    public Optional<CustomerResponse> fetchCutomerByEmail(final String email) {
+    public Optional<CustomerResponse> fetchCustomerByEmail(final String email) {
         if (email != null) {
             final var selectSql = "SELECT id, name, email, age FROM customer WHERE email = ?";
             final var customer = this.jdbcTemplate.query(selectSql, customerRowMapper, email);

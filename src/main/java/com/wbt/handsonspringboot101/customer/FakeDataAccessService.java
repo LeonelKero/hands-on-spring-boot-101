@@ -76,7 +76,7 @@ public class FakeDataAccessService implements CustomerDAO {
     }
 
     @Override
-    public Optional<CustomerResponse> fetchCutomerByEmail(final String email) {
+    public Optional<CustomerResponse> fetchCustomerByEmail(final String email) {
         return customers
                 .stream()
                 .filter(customer -> customer.getEmail().equals(email))
