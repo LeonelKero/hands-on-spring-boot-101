@@ -1,15 +1,21 @@
 package com.wbt.handsonspringboot101.customer;
 
+import com.wbt.handsonspringboot101.exception.DuplicateResourcefoundException;
+import com.wbt.handsonspringboot101.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class CustomerJpaDataAccessServiceTest {
 
@@ -46,12 +52,13 @@ class CustomerJpaDataAccessServiceTest {
         // GIVEN
         final var testEmail = UUID.randomUUID() + "-test@outlook.com";
         final var customer = new CustomerRequest("mel", testEmail, 50);
-        underTest.save(customer);
-        final var customer2 = new CustomerRequest("Sass", testEmail, 43);
-        // WHEN
-        underTest.save(customer2);
-        // THEN
+        underTest.save(customer); // save first customer with that ID
 
+        final var customer2 = new CustomerRequest("Sass", testEmail, 43);
+        when(customerRepository.existsCustomerByEmail(testEmail)).thenReturn(true);
+        // WHEN  // THEN
+        // try to save new customer with the same ID
+        assertThatThrownBy(() -> underTest.save(customer2)).isInstanceOf(DuplicateResourcefoundException.class);
     }
 
     @Test
@@ -74,14 +81,24 @@ class CustomerJpaDataAccessServiceTest {
     }
 
     @Test
-    void removeCustomer() {
+    void removeCustomerIfCustomerExists() {
         // GIVEN
-        final var customerId = 3L;
+        final var customerId = 1L;
+        when(customerRepository.existsCustomerById(customerId)).thenReturn(true);
         // WHEN
-        underTest.removeCustomer(customerId);
+        final var result = underTest.removeCustomer(customerId);
         // THEN
         verify(customerRepository).deleteById(customerId);
-        // TODO: Fix this test - check use cases
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void removeCustomerThroughExceptionIfCustomerDoesNotExist() {
+        // GIVEN
+        final var customerId = 1L;
+        when(customerRepository.existsCustomerById(customerId)).thenReturn(false);
+        // WHEN // THEN
+        assertThatThrownBy(() -> underTest.removeCustomer(customerId)).isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
@@ -89,11 +106,25 @@ class CustomerJpaDataAccessServiceTest {
         // GIVEN
         final var someId = 1L;
         final var someExistingCustomer = new CustomerRequest("test-name", "test@mail.com", 44);
+        final var existingCustomer = new Customer(someId, "mai", "mai@mail.com", 32);
+        when(customerRepository.findById(someId)).thenReturn(Optional.of(existingCustomer));
         // WHEN
-        underTest.updateCustomer(someId, someExistingCustomer);
+        final var result = underTest.updateCustomer(someId, someExistingCustomer);
         // THEN
-        verify(customerRepository).findById(someId);
-        // TODO: Fix this test - check use cases
+        verify(customerRepository).save(any(Customer.class));
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void cannotUpdateCustomerIfCustomerDoesNotExist() {
+        // GIVEN
+        final var someId = 1L;
+        final var someExistingCustomer = new CustomerRequest("test-name", "test@mail.com", 44);
+        when(customerRepository.findById(someId)).thenReturn(Optional.empty());
+        // WHEN
+        final var result = underTest.updateCustomer(someId, someExistingCustomer);
+        // THEN
+        assertThat(result).isFalse();
     }
 
     @Test
