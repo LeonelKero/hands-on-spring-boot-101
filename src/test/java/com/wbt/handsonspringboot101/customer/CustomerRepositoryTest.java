@@ -20,6 +20,7 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest {
 
     @BeforeEach
     void setUp() {
+        underTest.deleteAll();
     }
 
     @Test
