@@ -68,4 +68,11 @@ public class CustomerJpaDataAccessService implements CustomerDAO {
     public Boolean isEmailAlreadyExist(final String email) {
         return this.customerRepository.existsCustomerByEmail(email);
     }
+
+    @Override
+    public Optional<CustomerResponse> fetchCutomerByEmail(final String email) {
+        return this.customerRepository
+                .findByEmail(email)
+                .map(customer -> new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getAge()));
+    }
 }

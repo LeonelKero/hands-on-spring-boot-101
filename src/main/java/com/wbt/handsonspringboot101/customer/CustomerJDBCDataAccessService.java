@@ -63,4 +63,14 @@ public class CustomerJDBCDataAccessService implements CustomerDAO {
         final var result = this.jdbcTemplate.query("SELECT id, name, email, age FROM customer WHERE email = ?", customerRowMapper, email);
         return !result.isEmpty();
     }
+
+    @Override
+    public Optional<CustomerResponse> fetchCutomerByEmail(final String email) {
+        if (email != null) {
+            final var selectSql = "SELECT id, name, email, age FROM customer WHERE email = ?";
+            final var customer = this.jdbcTemplate.query(selectSql, customerRowMapper, email);
+            return customer.stream().findFirst();
+        }
+        return Optional.empty();
+    }
 }
