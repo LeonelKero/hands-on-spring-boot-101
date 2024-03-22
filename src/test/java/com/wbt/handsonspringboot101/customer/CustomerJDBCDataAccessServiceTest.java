@@ -89,9 +89,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest {
         // GIVEN
         final var wrongId = -2L;
         // WHEN
-        final var possibleCustomer = underTest.removeCustomer(wrongId);
+        final var possibleCustomer = underTest.fetchCustomer(wrongId);
         // THEN
-        assertThat(possibleCustomer).isFalse();
+        assertThat(possibleCustomer).isEmpty();
     }
 
     @Test
