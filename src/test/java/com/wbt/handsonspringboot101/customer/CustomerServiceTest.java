@@ -9,8 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -57,6 +56,7 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> underTest.save(customer))
                 .isInstanceOf(DuplicateResourcefoundException.class)
                 .hasMessage("Email already taken");
+        verify(customerDAO, never()).save(any(CustomerRequest.class));
     }
 
     @Test

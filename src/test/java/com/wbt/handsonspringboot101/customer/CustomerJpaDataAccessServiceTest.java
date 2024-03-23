@@ -15,8 +15,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CustomerJpaDataAccessServiceTest {
 
@@ -66,8 +65,11 @@ class CustomerJpaDataAccessServiceTest {
         final var customer2 = new CustomerRequest("Sass", testEmail, 43);
         when(customerRepository.existsCustomerByEmail(testEmail)).thenReturn(true);
         // WHEN  // THEN
-        // try to save new customer with the same ID
-        assertThatThrownBy(() -> underTest.save(customer2)).isInstanceOf(DuplicateResourcefoundException.class);
+        // try to save new customer with the same Email
+        assertThatThrownBy(() -> underTest.save(customer2))
+                .isInstanceOf(DuplicateResourcefoundException.class).hasMessage("Email already taken");
+        // make sure that the repository will never be called with any customer class to be saved
+        //verify(customerRepository, never()).save(any(Customer.class));
     }
 
     @Test
@@ -110,6 +112,8 @@ class CustomerJpaDataAccessServiceTest {
         assertThatThrownBy(() -> underTest.removeCustomer(customerId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Customer resource with id [%s] not found".formatted(customerId));
+
+        verify(customerRepository, never()).deleteById(any(Long.class));
     }
 
     @Test
