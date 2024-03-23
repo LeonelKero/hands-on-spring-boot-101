@@ -5,6 +5,7 @@ import com.wbt.handsonspringboot101.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -41,10 +42,17 @@ class CustomerJpaDataAccessServiceTest {
         // GIVEN
         final var testEmail = UUID.randomUUID() + "-test@outlook.com";
         final var customer = new CustomerRequest("mel", testEmail, 50);
+        when(customerRepository.existsCustomerByEmail(testEmail)).thenReturn(false);
         // WHEN
+        final var argumentCaptor = ArgumentCaptor.forClass(Customer.class);
         underTest.save(customer);
         // THEN
-        verify(customerRepository).save(any(Customer.class));
+        verify(customerRepository).save(argumentCaptor.capture()); // capture the passed element¬
+
+        final var capturedCustomer = argumentCaptor.getValue();
+        assertThat(capturedCustomer.getName()).isEqualTo(customer.name());
+        assertThat(capturedCustomer.getEmail()).isEqualTo(customer.email());
+        assertThat(capturedCustomer.getAge()).isEqualTo(customer.age());
     }
 
     @Test
@@ -98,7 +106,9 @@ class CustomerJpaDataAccessServiceTest {
         final var customerId = 1L;
         when(customerRepository.existsCustomerById(customerId)).thenReturn(false);
         // WHEN // THEN
-        assertThatThrownBy(() -> underTest.removeCustomer(customerId)).isInstanceOf(ResourceNotFoundException.class);
+        assertThatThrownBy(() -> underTest.removeCustomer(customerId))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Customer resource with id [%s] not found".formatted(customerId));
     }
 
     @Test

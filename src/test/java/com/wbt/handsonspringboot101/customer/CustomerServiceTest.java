@@ -55,7 +55,8 @@ class CustomerServiceTest {
         // WHEN
         // THEN
         assertThatThrownBy(() -> underTest.save(customer))
-                .isInstanceOf(DuplicateResourcefoundException.class).hasMessage("Email already taken");
+                .isInstanceOf(DuplicateResourcefoundException.class)
+                .hasMessage("Email already taken");
     }
 
     @Test
