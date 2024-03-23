@@ -54,7 +54,8 @@ class CustomerServiceTest {
         when(customerDAO.isEmailAlreadyExist(customer.email())).thenReturn(true);
         // WHEN
         // THEN
-        assertThatThrownBy(() -> underTest.save(customer)).isInstanceOf(DuplicateResourcefoundException.class);
+        assertThatThrownBy(() -> underTest.save(customer))
+                .isInstanceOf(DuplicateResourcefoundException.class).hasMessage("Email already taken");
     }
 
     @Test
