@@ -50,6 +50,7 @@ class CustomerJpaDataAccessServiceTest {
         verify(customerRepository).save(argumentCaptor.capture()); // capture the passed element¬
 
         final var capturedCustomer = argumentCaptor.getValue();
+        assertThat(capturedCustomer.getId()).isNull();
         assertThat(capturedCustomer.getName()).isEqualTo(customer.name());
         assertThat(capturedCustomer.getEmail()).isEqualTo(customer.email());
         assertThat(capturedCustomer.getAge()).isEqualTo(customer.age());
