@@ -75,5 +75,19 @@ public class CustomerIntegrationTest {
                 .expectBody(new ParameterizedTypeReference<CustomerResponse>() {
                 })
                 .isEqualTo(expectedCustomer);
+
+        // Delete customer
+        Long customerId = existingCustomer.id();
+        final var deletionResult = webTestClient
+                .delete()
+                .uri(URI.concat("/{id}"), customerId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(new ParameterizedTypeReference<String>() {
+                })
+                .returnResult()
+                .getResponseBody();
+        assertThat(deletionResult).isEqualTo("Customer with id %s resource removed successfully".formatted(customerId));
     }
 }
