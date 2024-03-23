@@ -89,5 +89,7 @@ public class CustomerIntegrationTest {
                 .returnResult()
                 .getResponseBody();
         assertThat(deletionResult).isEqualTo("Customer with id %s resource removed successfully".formatted(customerId));
+
+        // TODO: Reorganize test cases (GET, POST, PUT, DELETE)
     }
 }
