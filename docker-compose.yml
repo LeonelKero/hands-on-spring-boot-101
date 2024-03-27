@@ -14,6 +14,19 @@ services:
       - db
     restart: unless-stopped
 
+  wbt-customer-api:
+    container_name: wbt-customer
+    image: greengorilla/wbt-customer-api:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-service:5432/customer
+    ports:
+      - "8080:8080"
+    networks:
+      - db
+    depends_on:
+      - db-service
+    restart: unless-stopped
+
 networks:
   db:
     driver: bridge
