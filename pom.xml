@@ -168,12 +168,6 @@
                             </platform>
                         </platforms>
                     </from>
-                    <container>
-                        <format>OCI</format>
-                        <ports>
-                            <port>8080</port>
-                        </ports>
-                    </container>
                     <to>
                         <image>docker.io/${docker.username}/${project.artifactId}:${project.version}</image>
                         <tags>
@@ -181,6 +175,14 @@
                         </tags>
                     </to>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
